@@ -3,6 +3,7 @@ import bisect
 
 
 class HashRing(object):
+    VIRTUAL_CNT = 40
 
     def __init__(self, node_dict):
         self.ring = dict()
@@ -23,14 +24,14 @@ class HashRing(object):
                 self.keys.remove(key)
                 del self.key_node[key]
 
-        self.node_index -= 1
-        self.nodes.remove(node)
+            self.node_index -= 1
+            self.nodes.remove(node)
 
     def add_nodes(self, node_dict, hook_func=None):
         self.nodes.extend(node_dict.keys())
         self.weight.update(node_dict.copy())
         self._update_ring(start=self.node_index)
-        self.node_index = self.get_nodes_cnt()
+        self.node_index = len(self.nodes)
         self.keys.sort()
 
     def get_node(self, string_key):
@@ -50,6 +51,10 @@ class HashRing(object):
         if pos == len(self.keys):
             return 0
         return pos
+
+    def gen_key(self, string_key):
+        b_key = self._hash_digest(string_key)
+        return self._hash_val(b_key, lambda x: x)
 
     def _update_ring(self, start=0):
         for node in self.nodes[start:]:
