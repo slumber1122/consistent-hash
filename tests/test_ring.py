@@ -60,3 +60,6 @@ class TestRing(TestCase):
         self.assertEqual(len(ring.nodes), 6)
         ring.del_nodes(nodes)
         self.assertEqual(len(ring.nodes), 4)
+
+    def test_print(self):
+	    print(123)
